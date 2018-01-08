@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 public class Customer {
     @Id
-    @GeneratedValue() // strategy по умолчанию GenerationType.AUTO обеспечивает создание сквозных идентификаторов
+    @GeneratedValue // strategy по умолчанию GenerationType.AUTO обеспечивает создание сквозных идентификаторов
     private long id;
 
     @Column

@@ -1,4 +1,4 @@
-package ru.rooxtest.partnersmappings.security;
+package ru.rooxtest.partnersmappings.security.crypt;
 
 public class DecryptException extends Exception {
     public DecryptException() {

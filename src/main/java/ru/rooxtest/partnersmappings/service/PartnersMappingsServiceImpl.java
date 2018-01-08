@@ -13,7 +13,7 @@ import ru.rooxtest.partnersmappings.repository.PartnerMappingRepository;
 import java.util.List;
 
 /**
- * Обща
+ * Сервис доступа к БД
  */
 @Service
 @Transactional

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Просто возвращаем код
+ * Обработчик, определяющий действия при неавторизованном запросе
  *
  */
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {

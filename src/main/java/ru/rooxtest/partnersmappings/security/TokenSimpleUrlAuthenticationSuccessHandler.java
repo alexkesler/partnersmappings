@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Обработчик, исключающий переадресацию при успешной аутентификации
+ * Обработчик успешной аутентификации, исключающий переадресацию
  */
 public class TokenSimpleUrlAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 

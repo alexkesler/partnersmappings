@@ -4,18 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import ru.rooxtest.partnersmappings.controller.support.CustomerNotFoundException;
 import ru.rooxtest.partnersmappings.controller.support.WrongCustomerException;
 import ru.rooxtest.partnersmappings.domain.Customer;
 import ru.rooxtest.partnersmappings.domain.PartnerMapping;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
-import ru.rooxtest.partnersmappings.controller.support.CustomerNotFoundException;
 
-import java.security.Principal;
 import java.util.List;
 
 /**

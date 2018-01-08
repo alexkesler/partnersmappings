@@ -13,6 +13,9 @@ import ru.rooxtest.partnersmappings.repository.CustomerRepository;
 
 import java.util.ArrayList;
 
+/**
+ * Служба, предоставляющая данные о пользователях для Spring Security
+ */
 @Service
 public class CustomerUserDetailService implements UserDetailsService {
 

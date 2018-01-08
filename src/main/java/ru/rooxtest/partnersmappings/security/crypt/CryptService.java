@@ -1,14 +1,15 @@
-package ru.rooxtest.partnersmappings.security;
+package ru.rooxtest.partnersmappings.security.crypt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.rooxtest.partnersmappings.controller.support.CustomerNotFoundException;
 import ru.rooxtest.partnersmappings.domain.Customer;
+import ru.rooxtest.partnersmappings.security.Token;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
 
 /**
- * Простая служба для расшифровки токена в формате JSON
+ * Простая служба для расшифровки токена
  */
 public class CryptService {
     private Logger log = LoggerFactory.getLogger(this.getClass());

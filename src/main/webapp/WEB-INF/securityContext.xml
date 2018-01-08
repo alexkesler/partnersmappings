@@ -32,6 +32,6 @@
 
     <beans:bean id="userDetailsService" class="ru.rooxtest.partnersmappings.security.CustomerUserDetailService" />
 
-    <beans:bean id="cryptService" class="ru.rooxtest.partnersmappings.security.CryptService" />
+    <beans:bean id="cryptService" class="ru.rooxtest.partnersmappings.security.crypt.CryptService" />
 
 </beans:beans>

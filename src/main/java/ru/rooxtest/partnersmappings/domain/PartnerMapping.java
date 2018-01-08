@@ -12,7 +12,7 @@ import java.util.Objects;
 @Entity
 public class PartnerMapping {
     @Id
-    @GeneratedValue() // strategy по умолчанию GenerationType.AUTO обеспечивает создание сквозных идентификаторов
+    @GeneratedValue // strategy по умолчанию GenerationType.AUTO обеспечивает создание сквозных идентификаторов
     private long id;
 
     @Column(nullable = false)
