@@ -11,6 +11,7 @@ import ru.rooxtest.partnersmappings.repository.CustomerRepository;
 import ru.rooxtest.partnersmappings.repository.PartnerMappingRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Сервис доступа к БД
@@ -34,7 +35,7 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
     }
 
     @Transactional(readOnly = true)
-    public Customer findCustomerById(long id) {
+    public Customer findCustomerById(UUID id) {
         log.info("Reading customer by id: " + id);
         Customer customer = customerRepository.findById(id);
         log.info("Read: " + customer);
@@ -49,7 +50,7 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
         return customer;    }
 
     @Transactional(readOnly = true)
-    public List<PartnerMapping> findPartnerMappingsByCustomerId(long customerId) {
+    public List<PartnerMapping> findPartnerMappingsByCustomerId(UUID customerId) {
         log.info("Reading PartnerMappings by customerId: " + customerId);
         List<PartnerMapping> partnerMappings = partnerMappingRepository.findByCustomerId(customerId);
         log.info("Read " + partnerMappings.size() + " PartnerMappings");
@@ -62,7 +63,7 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
         log.info("Saving complete");
     }
 
-    public void removePartnerMapping(long id) {
+    public void removePartnerMapping(UUID id) {
         log.info("Removing PartnerMapping: " + id);
         partnerMappingRepository.remove(id);
         log.info("Removing complete");

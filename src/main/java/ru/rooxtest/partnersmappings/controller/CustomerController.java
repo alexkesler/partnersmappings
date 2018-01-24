@@ -14,6 +14,7 @@ import ru.rooxtest.partnersmappings.domain.PartnerMapping;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * REST контроллер
@@ -62,7 +63,7 @@ public class CustomerController {
     }
 
     @RequestMapping(path = "/{id}/partnermappings/{pmid}", method = RequestMethod.DELETE)
-    ResponseEntity removePartnerMapping(@PathVariable String id, @PathVariable long pmid) {
+    ResponseEntity removePartnerMapping(@PathVariable String id, @PathVariable UUID pmid) {
         log.info("Receive DELETE for PartnerMapping: " + pmid);
         getCustomer(id);
         partnersMappingsService.removePartnerMapping(pmid);
@@ -74,16 +75,17 @@ public class CustomerController {
 
 
 
-    private Customer getCustomer(String id) {
-        if (id==null || id.isEmpty() || !id.matches("@me|\\d+")) throw new RuntimeException("Wrong id: " + id);
+    private Customer getCustomer(String idString) {
+        if (idString==null || idString.isEmpty() || !idString.matches("@me|[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12}"))
+            throw new RuntimeException("Wrong id: " + idString);
         Customer customer = null;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!id.equals("@me")) {
-            customer = partnersMappingsService.findCustomerById(Long.parseLong(id));
+        if (!idString.equals("@me")) {
+            customer = partnersMappingsService.findCustomerById(UUID.fromString(idString));
         } else {
             customer = partnersMappingsService.findCustomerByLogin(user.getUsername());
         }
-        if (customer == null) throw new CustomerNotFoundException("Not found Customer with id: " + id);
+        if (customer == null) throw new CustomerNotFoundException("Not found Customer with id: " + idString);
         if (!customer.getLogin().equals(user.getUsername())) throw new WrongCustomerException("PartnerMappings of customer: " + customer.getLogin() + " not permitted for current customer: " + user.getUsername());
         return customer;
     }

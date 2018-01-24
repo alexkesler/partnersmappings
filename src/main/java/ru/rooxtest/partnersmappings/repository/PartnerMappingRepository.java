@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -18,7 +19,7 @@ public class PartnerMappingRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public List<PartnerMapping> findByCustomerId(long customerId) {
+    public List<PartnerMapping> findByCustomerId(UUID customerId) {
         TypedQuery<PartnerMapping> query = em.createQuery("select pm from PartnerMapping pm where pm.customerId=:customerId", PartnerMapping.class);
         query.setParameter("customerId", customerId);
         List<PartnerMapping> partnerMappings = query.getResultList();
@@ -29,7 +30,7 @@ public class PartnerMappingRepository {
         em.persist(partnerMapping);
     }
 
-    public void remove(long id) {
+    public void remove(UUID id) {
         PartnerMapping partnerMapping = em.find(PartnerMapping.class, id);
         if (partnerMapping!=null)
             em.remove(partnerMapping);
