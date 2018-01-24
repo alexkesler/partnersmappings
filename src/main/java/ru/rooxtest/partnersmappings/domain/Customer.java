@@ -1,16 +1,13 @@
 package ru.rooxtest.partnersmappings.domain;
 
-import javax.persistence.*;
-import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 /**
  * Сущность Абонент
  */
 @Entity
-public class Customer {
-    @Id
-    @GeneratedValue // strategy по умолчанию GenerationType.AUTO обеспечивает создание сквозных идентификаторов
-    private long id;
+public class Customer extends AbstractEntity {
 
     @Column
     private String fio;
@@ -27,8 +24,6 @@ public class Customer {
     private String password;
 
 
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
 
     public String getFio() { return fio; }
     public void setFio(String fio) { this.fio = fio; }
@@ -45,18 +40,5 @@ public class Customer {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    // сравнение и hashCode только по id так как id уникальны
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return id == customer.id;
-    }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(id);
-    }
 }

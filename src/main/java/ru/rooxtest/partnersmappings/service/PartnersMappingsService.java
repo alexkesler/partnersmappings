@@ -4,6 +4,7 @@ import ru.rooxtest.partnersmappings.domain.Customer;
 import ru.rooxtest.partnersmappings.domain.PartnerMapping;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Сервис для взаимодействия с хранилищем
@@ -11,11 +12,11 @@ import java.util.List;
 public interface PartnersMappingsService {
 
     List<Customer> findAllCustomers();
-    Customer findCustomerById(long id);
+    Customer findCustomerById(UUID id);
     Customer findCustomerByLogin(String login);
 
-    List<PartnerMapping> findPartnerMappingsByCustomerId(long customerId);
+    List<PartnerMapping> findPartnerMappingsByCustomerId(UUID customerId);
     void savePartnerMapping(PartnerMapping partnerMapping);
-    void removePartnerMapping(long id);
+    void removePartnerMapping(UUID id);
 
 }

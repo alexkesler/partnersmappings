@@ -8,6 +8,8 @@ import ru.rooxtest.partnersmappings.domain.Customer;
 import ru.rooxtest.partnersmappings.security.Token;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
 
+import java.util.UUID;
+
 /**
  * Простая служба для расшифровки токена
  */
@@ -29,10 +31,11 @@ public class CryptService {
         if (!encryptedToken.matches("Bearer\\d+"))
             throw new DecryptException("Auth string is wrong");
         String idString = encryptedToken.substring(6);
-        long id = Integer.parseInt(idString);
+        UUID id = UUID.fromString(idString);
         Customer customer = partnersMappingsService.findCustomerById(id);
         if (customer==null) throw new CustomerNotFoundException();
         Token token = new Token(customer.getLogin(),customer.getPassword());
         return token;
     }
+
 }
