@@ -27,7 +27,7 @@ public class CustomerController {
     @Autowired
     private PartnersMappingsService partnersMappingsService;
 
-    @RequestMapping()
+    @RequestMapping(method = RequestMethod.GET)
     ResponseEntity getCustomers() {
         log.info("Receive GET for all customers");
         List<Customer> customers = partnersMappingsService.findAllCustomers();
@@ -36,7 +36,7 @@ public class CustomerController {
         return ResponseEntity.ok(customers);
     }
 
-    @RequestMapping(path = "/{id}")
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     ResponseEntity getCustomerById(@PathVariable String id) {
         log.info("Receive GET for customer with id: " + id);
         Customer customer = getCustomer(id);
@@ -44,7 +44,7 @@ public class CustomerController {
     }
 
 
-    @RequestMapping(path = "/{id}/partnermappings")
+    @RequestMapping(path = "/{id}/partnermappings", method = RequestMethod.GET)
     ResponseEntity getPartnerMappingsForCustomer(@PathVariable String id) {
         log.info("Receive GET for all PartnerMappings for Customer: " + id);
         Customer customer = getCustomer(id);
