@@ -13,6 +13,7 @@ import ru.rooxtest.partnersmappings.domain.Customer;
 import ru.rooxtest.partnersmappings.domain.PartnerMapping;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,12 +64,36 @@ public class CustomerController {
     }
 
     @RequestMapping(path = "/{custid}/partnermappings", method = RequestMethod.POST)
-    ResponseEntity savePartnerMapping(@PathVariable String custid, @RequestBody PartnerMapping partnerMapping) {
+    ResponseEntity createPartnerMapping(@PathVariable String custid, @RequestBody PartnerMapping partnerMapping) {
         log.info("Receive POST with PartnerMapping: " + partnerMapping);
         Customer customer = getCustomer(custid);
         partnerMapping.setCustomerId(customer.getId());
         partnersMappingsService.savePartnerMapping(partnerMapping);
-        return ResponseEntity.accepted().body(partnerMapping);
+        URI location = URI.create("/" + custid + "/partnermappings/" + partnerMapping.getId());
+        return ResponseEntity.created(location).body(partnerMapping);
+    }
+
+
+    @RequestMapping(path = "/{custid}/partnermappings/{pmid}", method = RequestMethod.PUT)
+    ResponseEntity updatePartnerMapping(@PathVariable String custid,
+                                        @PathVariable UUID pmid,
+                                        @RequestBody PartnerMapping partnerMapping) {
+        log.info("Receive POST with PartnerMapping: " + partnerMapping);
+        Customer customer = getCustomer(custid);
+
+        partnerMapping.setId(pmid); /// устанавливаем Id из URL
+        partnerMapping.setCustomerId(customer.getId());
+
+        PartnerMapping existPartnerMapping = partnersMappingsService.findPartnerMapping(pmid);
+
+        partnersMappingsService.savePartnerMapping(partnerMapping);
+        
+        if (existPartnerMapping != null) {
+            return ResponseEntity.ok(partnerMapping);
+        } else {
+            URI location = URI.create("/" + custid + "/partnermappings/" + partnerMapping.getId());
+            return ResponseEntity.created(location).body(partnerMapping);
+        }
     }
 
 
