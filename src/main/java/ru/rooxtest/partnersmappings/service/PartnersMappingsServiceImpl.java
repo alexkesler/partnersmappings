@@ -57,6 +57,14 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
         return partnerMappings;
     }
 
+    @Transactional(readOnly = true)
+    public PartnerMapping findPartnerMapping(UUID id) {
+        log.info("Reading PartnerMapping: " + id);
+        PartnerMapping partnerMapping = partnerMappingRepository.find(id);
+        log.info("Read " + partnerMapping);
+        return partnerMapping;
+    }
+
     public void savePartnerMapping(PartnerMapping partnerMapping) {
         log.info("Saving " + partnerMapping);
         partnerMappingRepository.save(partnerMapping);

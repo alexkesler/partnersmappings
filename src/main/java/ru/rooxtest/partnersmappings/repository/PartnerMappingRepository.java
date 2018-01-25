@@ -26,6 +26,10 @@ public class PartnerMappingRepository {
         return partnerMappings;
     }
 
+    public PartnerMapping find(UUID id) {
+        return em.find(PartnerMapping.class, id);
+    }
+
     public void save(PartnerMapping partnerMapping) {
         em.persist(partnerMapping);
     }

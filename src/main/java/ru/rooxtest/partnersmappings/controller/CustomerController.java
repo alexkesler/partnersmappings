@@ -36,36 +36,47 @@ public class CustomerController {
         return ResponseEntity.ok(customers);
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    ResponseEntity getCustomerById(@PathVariable String id) {
-        log.info("Receive GET for customer with id: " + id);
-        Customer customer = getCustomer(id);
+    @RequestMapping(path = "/{custid}", method = RequestMethod.GET)
+    ResponseEntity getCustomerById(@PathVariable String custid) {
+        log.info("Receive GET for customer with id: " + custid);
+        Customer customer = getCustomer(custid);
         return ResponseEntity.ok(customer);
     }
 
 
-    @RequestMapping(path = "/{id}/partnermappings", method = RequestMethod.GET)
-    ResponseEntity getPartnerMappingsForCustomer(@PathVariable String id) {
-        log.info("Receive GET for all PartnerMappings for Customer: " + id);
-        Customer customer = getCustomer(id);
+    @RequestMapping(path = "/{custid}/partnermappings", method = RequestMethod.GET)
+    ResponseEntity getPartnerMappingsForCustomer(@PathVariable String custid) {
+        log.info("Receive GET for all PartnerMappings for Customer: " + custid);
+        Customer customer = getCustomer(custid);
         List<PartnerMapping> partnerMappings = partnersMappingsService.findPartnerMappingsByCustomerId(customer.getId());
         log.info("Send " + partnerMappings.size() + " PartnerMappings");
         return ResponseEntity.ok(partnerMappings);
     }
 
-    @RequestMapping(path = "/{id}/partnermappings", method = RequestMethod.POST)
-    ResponseEntity savePartnerMapping(@PathVariable String id, @RequestBody PartnerMapping partnerMapping) {
+    @RequestMapping(path = "/{custid}/partnermappings/{pmid}", method = RequestMethod.GET)
+    ResponseEntity getPartnerMappingsForCustomer(@PathVariable String custid, @PathVariable UUID pmid) {
+        log.info("Receive GET for PartnerMapping for Customer: " + custid + " with id: " + pmid);
+        // проверяем что пользователь правильный если указан
+        getCustomer(custid);
+        PartnerMapping partnerMapping = partnersMappingsService.findPartnerMapping(pmid);
+        return ResponseEntity.ok(partnerMapping);
+    }
+
+    @RequestMapping(path = "/{custid}/partnermappings", method = RequestMethod.POST)
+    ResponseEntity savePartnerMapping(@PathVariable String custid, @RequestBody PartnerMapping partnerMapping) {
         log.info("Receive POST with PartnerMapping: " + partnerMapping);
-        Customer customer = getCustomer(id);
+        Customer customer = getCustomer(custid);
         partnerMapping.setCustomerId(customer.getId());
         partnersMappingsService.savePartnerMapping(partnerMapping);
         return ResponseEntity.accepted().body(partnerMapping);
     }
 
-    @RequestMapping(path = "/{id}/partnermappings/{pmid}", method = RequestMethod.DELETE)
-    ResponseEntity removePartnerMapping(@PathVariable String id, @PathVariable UUID pmid) {
+
+    @RequestMapping(path = "/{custid}/partnermappings/{pmid}", method = RequestMethod.DELETE)
+    ResponseEntity removePartnerMapping(@PathVariable String custid, @PathVariable UUID pmid) {
         log.info("Receive DELETE for PartnerMapping: " + pmid);
-        getCustomer(id);
+        // проверяем что пользователь правильный если указан
+        getCustomer(custid);
         partnersMappingsService.removePartnerMapping(pmid);
         return ResponseEntity.ok().build();
     }
