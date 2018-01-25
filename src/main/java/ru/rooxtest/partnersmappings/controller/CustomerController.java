@@ -77,8 +77,8 @@ public class CustomerController {
         log.info("Receive DELETE for PartnerMapping: " + pmid);
         // проверяем что пользователь правильный если указан
         getCustomer(custid);
-        partnersMappingsService.removePartnerMapping(pmid);
-        return ResponseEntity.ok().build();
+        PartnerMapping partnerMapping = partnersMappingsService.removePartnerMapping(pmid);
+        return ResponseEntity.ok(partnerMapping);
     }
 
 

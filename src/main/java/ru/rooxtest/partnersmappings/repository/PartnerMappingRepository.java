@@ -34,10 +34,11 @@ public class PartnerMappingRepository {
         em.persist(partnerMapping);
     }
 
-    public void remove(UUID id) {
+    public PartnerMapping remove(UUID id) {
         PartnerMapping partnerMapping = em.find(PartnerMapping.class, id);
         if (partnerMapping!=null)
             em.remove(partnerMapping);
+        return partnerMapping;
     }
 
 

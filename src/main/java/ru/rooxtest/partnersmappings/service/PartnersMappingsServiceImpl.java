@@ -71,10 +71,11 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
         log.info("Saving complete");
     }
 
-    public void removePartnerMapping(UUID id) {
+    public PartnerMapping removePartnerMapping(UUID id) {
         log.info("Removing PartnerMapping: " + id);
-        partnerMappingRepository.remove(id);
+        PartnerMapping partnerMapping = partnerMappingRepository.remove(id);
         log.info("Removing complete");
+        return partnerMapping;
     }
 
 }
