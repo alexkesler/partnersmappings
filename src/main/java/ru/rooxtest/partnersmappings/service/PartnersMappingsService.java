@@ -17,7 +17,7 @@ public interface PartnersMappingsService {
 
     List<PartnerMapping> findPartnerMappingsByCustomerId(UUID customerId);
     PartnerMapping findPartnerMapping(UUID id);
-    void savePartnerMapping(PartnerMapping partnerMapping);
+    PartnerMapping savePartnerMapping(PartnerMapping partnerMapping);
     PartnerMapping removePartnerMapping(UUID id);
 
 }

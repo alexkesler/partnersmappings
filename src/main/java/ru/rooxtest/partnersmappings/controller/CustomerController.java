@@ -68,9 +68,9 @@ public class CustomerController {
         log.info("Receive POST with PartnerMapping: " + partnerMapping);
         Customer customer = getCustomer(custid);
         partnerMapping.setCustomerId(customer.getId());
-        partnersMappingsService.savePartnerMapping(partnerMapping);
-        URI location = URI.create("/" + custid + "/partnermappings/" + partnerMapping.getId());
-        return ResponseEntity.created(location).body(partnerMapping);
+        PartnerMapping savedPartnerMapping = partnersMappingsService.savePartnerMapping(partnerMapping);
+        URI location = URI.create("/" + custid + "/partnermappings/" + savedPartnerMapping.getId());
+        return ResponseEntity.created(location).body(savedPartnerMapping);
     }
 
 
@@ -86,13 +86,13 @@ public class CustomerController {
 
         PartnerMapping existPartnerMapping = partnersMappingsService.findPartnerMapping(pmid);
 
-        partnersMappingsService.savePartnerMapping(partnerMapping);
+        PartnerMapping savedPartnerMapping = partnersMappingsService.savePartnerMapping(partnerMapping);
 
         if (existPartnerMapping != null) {
-            return ResponseEntity.ok(partnerMapping);
+            return ResponseEntity.ok(savedPartnerMapping);
         } else {
-            URI location = URI.create("/" + custid + "/partnermappings/" + partnerMapping.getId());
-            return ResponseEntity.created(location).body(partnerMapping);
+            URI location = URI.create("/" + custid + "/partnermappings/" + savedPartnerMapping.getId());
+            return ResponseEntity.created(location).body(savedPartnerMapping);
         }
     }
 

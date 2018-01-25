@@ -17,7 +17,6 @@ import java.util.UUID;
  * Сервис доступа к БД
  */
 @Service
-@Transactional
 public class PartnersMappingsServiceImpl implements PartnersMappingsService {
     private static final Logger log = LoggerFactory.getLogger(PartnersMappingsServiceImpl.class);
 
@@ -26,6 +25,7 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
     @Autowired
     private PartnerMappingRepository partnerMappingRepository;
 
+    @Override
     @Transactional(readOnly = true)
     public List<Customer> findAllCustomers() {
         log.info("Reading all Customers");
@@ -34,6 +34,7 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
         return customers;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Customer findCustomerById(UUID id) {
         log.info("Reading customer by id: " + id);
@@ -43,12 +44,15 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
     }
 
     @Override
+    @Transactional
     public Customer findCustomerByLogin(String login) {
         log.info("Reading customer by login: " + login);
         Customer customer = customerRepository.findByLogin(login);
         log.info("Read: " + customer);
-        return customer;    }
+        return customer;
+    }
 
+    @Override
     @Transactional(readOnly = true)
     public List<PartnerMapping> findPartnerMappingsByCustomerId(UUID customerId) {
         log.info("Reading PartnerMappings by customerId: " + customerId);
@@ -57,6 +61,7 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
         return partnerMappings;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public PartnerMapping findPartnerMapping(UUID id) {
         log.info("Reading PartnerMapping: " + id);
@@ -65,12 +70,17 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
         return partnerMapping;
     }
 
-    public void savePartnerMapping(PartnerMapping partnerMapping) {
+    @Override
+    @Transactional
+    public PartnerMapping savePartnerMapping(PartnerMapping partnerMapping) {
         log.info("Saving " + partnerMapping);
         partnerMappingRepository.save(partnerMapping);
         log.info("Saving complete");
+        return partnerMapping;
     }
 
+    @Override
+    @Transactional
     public PartnerMapping removePartnerMapping(UUID id) {
         log.info("Removing PartnerMapping: " + id);
         PartnerMapping partnerMapping = partnerMappingRepository.remove(id);
