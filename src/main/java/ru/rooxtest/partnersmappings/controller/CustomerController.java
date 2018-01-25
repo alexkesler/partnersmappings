@@ -87,7 +87,7 @@ public class CustomerController {
         PartnerMapping existPartnerMapping = partnersMappingsService.findPartnerMapping(pmid);
 
         partnersMappingsService.savePartnerMapping(partnerMapping);
-        
+
         if (existPartnerMapping != null) {
             return ResponseEntity.ok(partnerMapping);
         } else {
