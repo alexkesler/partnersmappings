@@ -22,7 +22,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(path = "/customers")
 public class CustomerController {
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(CustomerController.class);
 
     @Autowired
     private PartnersMappingsService partnersMappingsService;

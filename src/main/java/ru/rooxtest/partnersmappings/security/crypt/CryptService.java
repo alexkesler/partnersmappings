@@ -14,7 +14,7 @@ import java.util.UUID;
  * Простая служба для расшифровки токена
  */
 public class CryptService {
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(CryptService.class);
     @Autowired
     private PartnersMappingsService partnersMappingsService;
 

@@ -19,7 +19,7 @@ import java.util.UUID;
 @Service
 @Transactional
 public class PartnersMappingsServiceImpl implements PartnersMappingsService {
-    protected Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(PartnersMappingsServiceImpl.class);
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -69,7 +69,4 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
         log.info("Removing complete");
     }
 
-    private void addSampleCustomers() {
-
-    }
 }
