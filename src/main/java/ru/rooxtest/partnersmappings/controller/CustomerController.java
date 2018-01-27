@@ -103,7 +103,10 @@ public class CustomerController {
         // проверяем что пользователь правильный если указан
         getCustomer(custid);
         PartnerMapping partnerMapping = partnersMappingsService.removePartnerMapping(pmid);
-        return ResponseEntity.ok(partnerMapping);
+        if (partnerMapping==null)
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.ok(partnerMapping);
     }
 
 
