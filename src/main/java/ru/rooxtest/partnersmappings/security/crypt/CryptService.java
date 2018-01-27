@@ -28,7 +28,7 @@ public class CryptService {
      */
     public Token decryptToken(String encryptedToken) throws Exception {
         log.info("Processing token: " + encryptedToken);
-        if (!encryptedToken.matches("Bearer\\d+"))
+        if (!encryptedToken.matches("Bearer[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12}"))
             throw new DecryptException("Auth string is wrong");
         String idString = encryptedToken.substring(6);
         UUID id = UUID.fromString(idString);

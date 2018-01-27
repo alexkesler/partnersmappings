@@ -22,7 +22,7 @@ public class SimpleTokenAuthenticationFilter extends AbstractAuthenticationProce
     @Autowired
     private CryptService cryptService;
 
-    private final String AUTH_HEADER = "Authentication";
+    private final String AUTH_HEADER = "Authorization";
 
     public SimpleTokenAuthenticationFilter(String defaultFilterProcessesUrl,
                                            AuthenticationManager authenticationManager) {

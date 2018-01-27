@@ -22,7 +22,7 @@ public class ExceptionHandlerAdvice {
                 .body(e.getMessage());
     }
 
-   @ExceptionHandler(WrongCustomerException.class)
+    @ExceptionHandler(WrongCustomerException.class)
     public ResponseEntity handleWrongCustomerException(WrongCustomerException e) {
         log.error(e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
