@@ -2,11 +2,13 @@ package ru.rooxtest.partnersmappings.domain;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import static org.junit.Assert.*;
 
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerTest {
 
     private Customer customer;
@@ -30,12 +32,12 @@ public class CustomerTest {
     }
 
     @Test
-    public void testIdNotNull() {
+    public void test1IdNotNull() {
         assertNotNull(customer.id);
     }
 
     @Test
-    public void testUnique() {
+    public void test2Unique() {
         assertNotEquals(customer1,customer2);
      }
 

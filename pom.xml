@@ -19,6 +19,7 @@
         <org.apache.httpcomponents.version>4.5.2</org.apache.httpcomponents.version>
         <org.slf4j.version>1.6.1</org.slf4j.version>
         <junit.version>4.12</junit.version>
+        <com.jayway.jsonpath.version>2.3.0</com.jayway.jsonpath.version>
         <log4j.version>1.2.16</log4j.version>
     </properties>
 
@@ -152,6 +153,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${org.springframework.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${com.jayway.jsonpath.version}</version>
             <scope>test</scope>
         </dependency>
 
