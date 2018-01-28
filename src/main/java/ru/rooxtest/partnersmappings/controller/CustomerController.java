@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.rooxtest.partnersmappings.controller.support.CustomerNotFoundException;
+import ru.rooxtest.partnersmappings.controller.support.Transformer;
 import ru.rooxtest.partnersmappings.domain.Customer;
+import ru.rooxtest.partnersmappings.dto.CustomerDto;
 import ru.rooxtest.partnersmappings.security.AuthorizationHolder;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
 
@@ -24,22 +26,26 @@ public class CustomerController {
     @Autowired
     private PartnersMappingsService partnersMappingsService;
     @Autowired
+    private Transformer transformer;
+    @Autowired
     private AuthorizationHolder authorizationHolder;
 
     @RequestMapping(method = RequestMethod.GET)
     ResponseEntity getCustomers() {
         log.info("Receive GET for all customers");
         List<Customer> customers = partnersMappingsService.findAllCustomers();
-        customers.forEach((customer)->customer.setPassword(""));
-        log.info("Send " + customers.size() + " customers");
-        return ResponseEntity.ok(customers);
+        List<CustomerDto> customerDtos = transformer.transformCustomers(customers);
+        customerDtos.forEach((customerDto)->customerDto.setPassword(""));
+        log.info("Send " + customerDtos.size() + " customers");
+        return ResponseEntity.ok(customerDtos);
     }
 
     @RequestMapping(path = "/{custid}", method = RequestMethod.GET)
     ResponseEntity getCustomerById(@PathVariable String custid) {
         log.info("Receive GET for customer with id: " + custid);
         Customer customer = getCustomer(custid);
-        return ResponseEntity.ok(customer);
+        CustomerDto customerDto = transformer.transform(customer);
+        return ResponseEntity.ok(customerDto);
     }
 
 
