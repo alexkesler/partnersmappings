@@ -31,7 +31,7 @@ public class PartnerMappingRepository {
     }
 
     public void save(PartnerMapping partnerMapping) {
-        em.persist(partnerMapping);
+        em.merge(partnerMapping);
     }
 
     public PartnerMapping remove(UUID id) {

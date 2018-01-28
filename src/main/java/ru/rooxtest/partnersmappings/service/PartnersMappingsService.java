@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface PartnersMappingsService {
 
     List<Customer> findAllCustomers();
-    Customer findCustomerById(UUID id);
+    Customer findCustomer(UUID id);
     Customer findCustomerByLogin(String login);
 
     List<PartnerMapping> findPartnerMappingsByCustomerId(UUID customerId);

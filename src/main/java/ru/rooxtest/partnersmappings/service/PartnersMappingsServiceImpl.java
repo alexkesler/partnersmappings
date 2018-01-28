@@ -9,6 +9,7 @@ import ru.rooxtest.partnersmappings.domain.Customer;
 import ru.rooxtest.partnersmappings.domain.PartnerMapping;
 import ru.rooxtest.partnersmappings.repository.CustomerRepository;
 import ru.rooxtest.partnersmappings.repository.PartnerMappingRepository;
+import ru.rooxtest.partnersmappings.security.AuthorizationHolder;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +37,7 @@ public class PartnersMappingsServiceImpl implements PartnersMappingsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Customer findCustomerById(UUID id) {
+    public Customer findCustomer(UUID id) {
         log.info("Reading customer by id: " + id);
         Customer customer = customerRepository.findById(id);
         log.info("Read: " + customer);
