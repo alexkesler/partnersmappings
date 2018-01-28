@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Суперкласс
+ * Родительский класс для всех сущностей БД
  */
 @MappedSuperclass
 public abstract class AbstractEntity {
@@ -39,7 +39,6 @@ public abstract class AbstractEntity {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id);
     }
 }
