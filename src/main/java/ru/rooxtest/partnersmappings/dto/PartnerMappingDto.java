@@ -1,28 +1,17 @@
-package ru.rooxtest.partnersmappings.domain;
+package ru.rooxtest.partnersmappings.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import java.util.UUID;
 
-/**
- * Сущность привязка аккаунта
- */
-@Entity
-public class PartnerMapping  extends AbstractEntity {
-
-    @Column(nullable = false)
+public class PartnerMappingDto {
+    private UUID id;
     private UUID customerId;
-
-    @Column(length = 63)
     private String partnerId;
-
-    @Column(length = 127)
     private String accountId;
-
-    @Column(length = 127)
     private String fio;
+    private byte[] avatar;
 
-
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 
     public UUID getCustomerId() { return customerId; }
     public void setCustomerId(UUID customerId) { this.customerId = customerId; }
@@ -35,5 +24,8 @@ public class PartnerMapping  extends AbstractEntity {
 
     public String getFio() { return fio; }
     public void setFio(String fio) { this.fio = fio; }
+
+    public byte[] getAvatar() { return avatar; }
+    public void setAvatar(byte[] avatar) { this.avatar = avatar; }
 
 }

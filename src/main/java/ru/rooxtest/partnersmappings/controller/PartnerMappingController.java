@@ -6,9 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.rooxtest.partnersmappings.controller.support.CustomerNotFoundException;
-import ru.rooxtest.partnersmappings.controller.support.WrongCustomerException;
+import ru.rooxtest.partnersmappings.controller.support.Transformer;
 import ru.rooxtest.partnersmappings.domain.Customer;
 import ru.rooxtest.partnersmappings.domain.PartnerMapping;
+import ru.rooxtest.partnersmappings.dto.PartnerMappingDto;
 import ru.rooxtest.partnersmappings.security.AuthorizationHolder;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
 
@@ -27,7 +28,8 @@ public class PartnerMappingController {
 
     @Autowired
     private PartnersMappingsService partnersMappingsService;
-
+    @Autowired
+    private Transformer transformer;
     @Autowired
     private AuthorizationHolder authorizationHolder;
 
@@ -36,8 +38,9 @@ public class PartnerMappingController {
         log.info("Receive GET for all PartnerMappings for Customer: " + custid);
         Customer customer = getCustomer(custid);
         List<PartnerMapping> partnerMappings = partnersMappingsService.findPartnerMappingsByCustomerId(customer.getId());
-        log.info("Send " + partnerMappings.size() + " PartnerMappings");
-        return ResponseEntity.ok(partnerMappings);
+        List<PartnerMappingDto> partnerMappingDtos = transformer.transformPartnerMappngs(partnerMappings);
+        log.info("Send " + partnerMappingDtos.size() + " PartnerMappings");
+        return ResponseEntity.ok(partnerMappingDtos);
     }
 
     @RequestMapping(path = "/{custid}/partnermappings/{pmid}", method = RequestMethod.GET)
@@ -46,39 +49,47 @@ public class PartnerMappingController {
         // проверяем что пользователь правильный если указан
         getCustomer(custid);
         PartnerMapping partnerMapping = partnersMappingsService.findPartnerMapping(pmid);
-        return ResponseEntity.ok(partnerMapping);
+        PartnerMappingDto partnerMappingDto = transformer.transform(partnerMapping);
+        return ResponseEntity.ok(partnerMappingDto);
     }
 
     @RequestMapping(path = "/{custid}/partnermappings", method = RequestMethod.POST)
-    ResponseEntity createPartnerMapping(@PathVariable String custid, @RequestBody PartnerMapping partnerMapping) {
-        log.info("Receive POST with PartnerMapping: " + partnerMapping);
+    ResponseEntity createPartnerMapping(@PathVariable String custid, @RequestBody PartnerMappingDto partnerMappingDto) {
+        log.info("Receive POST with PartnerMapping: " + partnerMappingDto);
         Customer customer = getCustomer(custid);
+        PartnerMapping partnerMapping = transformer.transform(partnerMappingDto);
+        // Устанавливаем код абонента из URL а не тот, что был (или не был) указан
         partnerMapping.setCustomerId(customer.getId());
         PartnerMapping savedPartnerMapping = partnersMappingsService.savePartnerMapping(partnerMapping);
-        URI location = URI.create("/" + custid + "/partnermappings/" + savedPartnerMapping.getId());
-        return ResponseEntity.created(location).body(savedPartnerMapping);
+        PartnerMappingDto savedPartnerMappingDto = transformer.transform(savedPartnerMapping);
+        URI location = URI.create("/" + custid + "/partnermappings/" + savedPartnerMappingDto.getId());
+        return ResponseEntity.created(location).body(savedPartnerMappingDto);
     }
 
 
     @RequestMapping(path = "/{custid}/partnermappings/{pmid}", method = RequestMethod.PUT)
     ResponseEntity updatePartnerMapping(@PathVariable String custid,
                                         @PathVariable UUID pmid,
-                                        @RequestBody PartnerMapping partnerMapping) {
-        log.info("Receive PUT with PartnerMapping: " + partnerMapping);
+                                        @RequestBody PartnerMappingDto partnerMappingDto) {
+        log.info("Receive PUT with PartnerMapping: " + partnerMappingDto);
         Customer customer = getCustomer(custid);
 
-        partnerMapping.setId(pmid); /// устанавливаем Id из URL
+        PartnerMapping partnerMapping = transformer.transform(partnerMappingDto);
+        // устанавливаем Id из URL
+        partnerMapping.setId(pmid);
+        // Устанавливаем код абонента из URL а не тот, что был (или не был) указан
         partnerMapping.setCustomerId(customer.getId());
 
         PartnerMapping existPartnerMapping = partnersMappingsService.findPartnerMapping(pmid);
 
         PartnerMapping savedPartnerMapping = partnersMappingsService.savePartnerMapping(partnerMapping);
+        PartnerMappingDto savedPartnerMappingDto = transformer.transform(savedPartnerMapping);
 
         if (existPartnerMapping != null) {
-            return ResponseEntity.ok(savedPartnerMapping);
+            return ResponseEntity.ok(savedPartnerMappingDto);
         } else {
-            URI location = URI.create("/" + custid + "/partnermappings/" + savedPartnerMapping.getId());
-            return ResponseEntity.created(location).body(savedPartnerMapping);
+            URI location = URI.create("/" + custid + "/partnermappings/" + savedPartnerMappingDto.getId());
+            return ResponseEntity.created(location).body(savedPartnerMappingDto);
         }
     }
 
@@ -92,7 +103,7 @@ public class PartnerMappingController {
         if (partnerMapping==null)
             return ResponseEntity.noContent().build();
         else
-            return ResponseEntity.ok(partnerMapping);
+            return ResponseEntity.ok(transformer.transform(partnerMapping));
     }
 
 
