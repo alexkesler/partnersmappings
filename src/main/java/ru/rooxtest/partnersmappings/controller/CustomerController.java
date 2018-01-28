@@ -4,21 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import ru.rooxtest.partnersmappings.controller.support.CustomerNotFoundException;
-import ru.rooxtest.partnersmappings.controller.support.WrongCustomerException;
 import ru.rooxtest.partnersmappings.domain.Customer;
-import ru.rooxtest.partnersmappings.domain.PartnerMapping;
+import ru.rooxtest.partnersmappings.security.AuthorizationHolder;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
 
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * REST контроллер
+ * контроллер для абонентов
  */
 @RestController
 @RequestMapping(path = "/customers")
@@ -27,6 +23,8 @@ public class CustomerController {
 
     @Autowired
     private PartnersMappingsService partnersMappingsService;
+    @Autowired
+    private AuthorizationHolder authorizationHolder;
 
     @RequestMapping(method = RequestMethod.GET)
     ResponseEntity getCustomers() {
@@ -45,26 +43,17 @@ public class CustomerController {
     }
 
 
-
-
-
-
-
     private Customer getCustomer(String idString) {
         if (idString==null || idString.isEmpty() || !idString.matches("@me|[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12}"))
-            throw new RuntimeException("Wrong id: " + idString);
+            throw new CustomerNotFoundException("Wrong id: " + idString);
         Customer customer = null;
-        if (SecurityContextHolder.getContext().getAuthentication()==null) {
-            throw new WrongCustomerException();
-        }
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!idString.equals("@me")) {
-            customer = partnersMappingsService.findCustomerById(UUID.fromString(idString));
+        if (idString.equals("@me")) {
+            customer = authorizationHolder.getCustomer();
         } else {
-            customer = partnersMappingsService.findCustomerByLogin(user.getUsername());
+            UUID customerId = UUID.fromString(idString);
+            customer = partnersMappingsService.findCustomer(customerId);
         }
         if (customer == null) throw new CustomerNotFoundException("Not found Customer with id: " + idString);
-        if (!customer.getLogin().equals(user.getUsername())) throw new WrongCustomerException("PartnerMappings of customer: " + customer.getLogin() + " not permitted for current customer: " + user.getUsername());
         return customer;
     }
 }
