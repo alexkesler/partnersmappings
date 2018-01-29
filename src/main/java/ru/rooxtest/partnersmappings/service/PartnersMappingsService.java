@@ -13,7 +13,6 @@ public interface PartnersMappingsService {
 
     List<Customer> findAllCustomers();
     Customer findCustomer(UUID id);
-    Customer findCustomerByLogin(String login);
 
     List<PartnerMapping> findPartnerMappingsByCustomerId(UUID customerId);
     PartnerMapping findPartnerMapping(UUID id);

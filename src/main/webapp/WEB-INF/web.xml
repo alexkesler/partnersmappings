@@ -4,7 +4,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>WEB-INF/database-context.xml WEB-INF/security-context.xml</param-value>
+        <param-value>classpath:database-context.xml classpath:security-context.xml classpath:storage-context.xml</param-value>
     </context-param>
 
     <listener>
@@ -16,7 +16,7 @@
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>WEB-INF/partners-servlet.xml</param-value>
+            <param-value>classpath:partners-servlet.xml</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
@@ -28,7 +28,7 @@
 
     <filter>
         <filter-name>authorizationFilter</filter-name>
-        <filter-class>ru.rooxtest.partnersmappings.security.AuthorizationFilter</filter-class>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
 
     <filter-mapping>

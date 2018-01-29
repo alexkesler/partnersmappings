@@ -12,6 +12,7 @@ import ru.rooxtest.partnersmappings.domain.PartnerMapping;
 import ru.rooxtest.partnersmappings.dto.PartnerMappingDto;
 import ru.rooxtest.partnersmappings.security.AuthorizationHolder;
 import ru.rooxtest.partnersmappings.service.PartnersMappingsService;
+import ru.rooxtest.partnersmappings.storage.AvatarStorage;
 
 import java.net.URI;
 import java.util.List;
@@ -31,6 +32,8 @@ public class PartnerMappingController {
     @Autowired
     private Transformer transformer;
     @Autowired
+    private AvatarStorage avatarStorage;
+    @Autowired
     private AuthorizationHolder authorizationHolder;
 
     @RequestMapping(path = "/{custid}/partnermappings", method = RequestMethod.GET)
@@ -49,6 +52,7 @@ public class PartnerMappingController {
         // проверяем что пользователь правильный если указан
         getCustomer(custid);
         PartnerMapping partnerMapping = partnersMappingsService.findPartnerMapping(pmid);
+        if (partnerMapping==null) return ResponseEntity.notFound().build();
         PartnerMappingDto partnerMappingDto = transformer.transform(partnerMapping);
         return ResponseEntity.ok(partnerMappingDto);
     }
@@ -81,6 +85,8 @@ public class PartnerMappingController {
         partnerMapping.setCustomerId(customer.getId());
 
         PartnerMapping existPartnerMapping = partnersMappingsService.findPartnerMapping(pmid);
+        if (existPartnerMapping==null) return ResponseEntity.notFound().build();
+
 
         PartnerMapping savedPartnerMapping = partnersMappingsService.savePartnerMapping(partnerMapping);
         PartnerMappingDto savedPartnerMappingDto = transformer.transform(savedPartnerMapping);
@@ -100,10 +106,14 @@ public class PartnerMappingController {
         // проверяем что пользователь правильный если указан
         getCustomer(custid);
         PartnerMapping partnerMapping = partnersMappingsService.removePartnerMapping(pmid);
+
         if (partnerMapping==null)
-            return ResponseEntity.noContent().build();
-        else
-            return ResponseEntity.ok(transformer.transform(partnerMapping));
+            return ResponseEntity.notFound().build();
+        else {
+            PartnerMappingDto partnerMappingDto = transformer.transform(partnerMapping);
+            avatarStorage.deleteAvatar(partnerMappingDto.getId());
+            return ResponseEntity.ok(partnerMappingDto);
+        }
     }
 
 

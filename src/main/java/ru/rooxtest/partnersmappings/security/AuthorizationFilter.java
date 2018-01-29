@@ -37,11 +37,11 @@ public class AuthorizationFilter extends GenericFilterBean {
     private final static Logger log = LoggerFactory.getLogger(AuthorizationFilter.class);
 
     private final String AUTH_HEADER = "Authorization";
-    private final String URL_CUSTOMERS_FIT_REGEX = "/customers/?";
-    private final String URL_CUSTOMER_FIT_REGEX = "/customers/(?:@me|[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12})/?";
-    private final String URL_PARTNERMAPPINGS_FIT_REGEX = "/customers/(?:@me|[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12})/partnermappings/?";
-    private final String URL_PARTNERMAPPING_FIT_REGEX = "/customers/(?:@me|[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12})/partnermappings/[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12}";
-    private final String URL_ME_REGEX = "/customers/@me.*";
+    private final String URL_CUSTOMERS_FIT_REGEX = ".*/customers/?";
+    private final String URL_CUSTOMER_FIT_REGEX = ".*/customers/(?:@me|[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12})/?";
+    private final String URL_PARTNERMAPPINGS_FIT_REGEX = ".*/customers/(?:@me|[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12})/partnermappings/?";
+    private final String URL_PARTNERMAPPING_FIT_REGEX = ".*/customers/(?:@me|[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12})/partnermappings/[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12}";
+    private final String URL_ME_REGEX = ".*/customers/@me.*";
 
     private final String AUTH_REGEX = "Bearer[0-9a-f]{8}\\-(?:[0-9a-f]{4}\\-){3}[0-9a-f]{12}";
 

@@ -2,12 +2,16 @@ package ru.rooxtest.partnersmappings.controller.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import ru.rooxtest.partnersmappings.domain.Customer;
 import ru.rooxtest.partnersmappings.domain.PartnerMapping;
 import ru.rooxtest.partnersmappings.dto.CustomerDto;
 import ru.rooxtest.partnersmappings.dto.PartnerMappingDto;
+import ru.rooxtest.partnersmappings.storage.AvatarStorage;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,10 +27,11 @@ import static java.nio.file.StandardOpenOption.*;
 public class Transformer {
     private static final Logger log = LoggerFactory.getLogger(Transformer.class);
 
-    private Path uploadDir = Paths.get(System.getProperty("catalina.base"), "uploads");
-    //TODO подумать откуда брать путь для сохранения
+    @Autowired
+    private AvatarStorage avatarStorage;
 
     public CustomerDto transform(Customer customer) {
+        if (customer==null) return null;
         CustomerDto customerDto = new CustomerDto();
 
         customerDto.setId(customer.getId());
@@ -43,6 +48,7 @@ public class Transformer {
     }
 
     public PartnerMappingDto transform(PartnerMapping partnerMapping) {
+        if (partnerMapping==null) return null;
         PartnerMappingDto partnerMappingDto = new PartnerMappingDto();
 
         partnerMappingDto.setId(partnerMapping.getId());
@@ -50,7 +56,7 @@ public class Transformer {
         partnerMappingDto.setPartnerId(partnerMapping.getPartnerId());
         partnerMappingDto.setAccountId(partnerMapping.getAccountId());
         partnerMappingDto.setFio(partnerMapping.getFio());
-        partnerMappingDto.setAvatar(readAvatar(partnerMapping.getId()));
+        partnerMappingDto.setAvatar(avatarStorage.readAvatar(partnerMapping.getId()));
 
         return partnerMappingDto;
     }
@@ -61,6 +67,7 @@ public class Transformer {
 
 
     public PartnerMapping transform(PartnerMappingDto partnerMappingDto) {
+        if (partnerMappingDto==null) return null;
         PartnerMapping partnerMapping = new PartnerMapping();
 
         partnerMapping.setId(partnerMappingDto.getId());
@@ -68,7 +75,7 @@ public class Transformer {
         partnerMapping.setPartnerId(partnerMappingDto.getPartnerId());
         partnerMapping.setAccountId(partnerMappingDto.getAccountId());
         partnerMapping.setFio(partnerMappingDto.getFio());
-        writeAvatar(partnerMappingDto.getId(), partnerMappingDto.getAvatar());
+        avatarStorage.writeAvatar(partnerMapping.getId(), partnerMappingDto.getAvatar());
 
         return partnerMapping;
     }
@@ -78,28 +85,6 @@ public class Transformer {
     }
 
 
-    private byte[] readAvatar(UUID id) {
-        Path filePath = uploadDir.resolve(id.toString());
-        if (Files.exists(filePath)) {
-            try {
-                return Files.readAllBytes(filePath);
-            } catch (IOException e) {
-                log.error("Error while reading avatar", e);
-                return null;
-            }
-        }  else {
-            return null;
-        }
-    }
 
-    private void writeAvatar(UUID id, byte[] data) {
-        if (data == null) return;
-        Path filePath = uploadDir.resolve(id.toString());
-        try {
-            Files.write(filePath, data, WRITE,CREATE,TRUNCATE_EXISTING);
-        } catch (IOException e) {
-            log.error("Error while writing avatar", e);
-        }
-    }
 
 }

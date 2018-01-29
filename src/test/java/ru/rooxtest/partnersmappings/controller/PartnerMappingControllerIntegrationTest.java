@@ -27,8 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Интеграционные тесты для контроллера привязок
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/WEB-INF/database-context.xml", "/WEB-INF/security-context.xml","/WEB-INF/partners-servlet.xml"})
-@WebAppConfiguration(value = "classpath:")
+@ContextConfiguration(locations = {"/database-context.xml", "/security-context.xml", "/storage-context.xml", "/partners-servlet.xml"})
+@WebAppConfiguration
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PartnerMappingControllerIntegrationTest {
 
@@ -95,6 +95,16 @@ public class PartnerMappingControllerIntegrationTest {
     }
 
     @Test
+    public void test21GetPartnerMappingNotExistsWithFitAuthIsNotFound() throws Exception {
+        this.mockMvc.perform(get("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0" +
+                "/partnermappings/cb43d94d-0de9-4a4d-92e9-f5bbf243560b")
+                .header("Authorization","Bearer"+"5a60a081-b940-4dae-b12f-b11d6db2dfb0"))
+                .andDo(print()).andExpect(status().isNotFound());
+
+    }
+
+
+    @Test
     public void test30PostPartnerMappingWithAuthIsCreated() throws Exception {
 
         this.mockMvc.perform(post("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0/partnermappings")
@@ -112,7 +122,7 @@ public class PartnerMappingControllerIntegrationTest {
     }
 
     @Test
-    public void test31GetPartnerMappingWithFitAuthIsOkAndIsArrayAndSizeIs1AndFitFio() throws Exception {
+    public void test31GetPartnerMappingWithFitAuthIsOkAndFitFio() throws Exception {
         this.mockMvc.perform(get("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0" +
                 "/partnermappings/cb43d94d-0de9-4a4d-92e9-f5bbf243560b")
                 .header("Authorization","Bearer"+"5a60a081-b940-4dae-b12f-b11d6db2dfb0"))
@@ -140,7 +150,7 @@ public class PartnerMappingControllerIntegrationTest {
     }
 
     @Test
-    public void test33GetPartnerMappingWithFitAuthIsOkAndIsArrayAndSizeIs1AndChangedFio() throws Exception {
+    public void test33GetPartnerMappingWithFitAuthIsOkAndChangedFio() throws Exception {
         this.mockMvc.perform(get("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0" +
                                             "/partnermappings/cb43d94d-0de9-4a4d-92e9-f5bbf243560b")
                 .header("Authorization","Bearer"+"5a60a081-b940-4dae-b12f-b11d6db2dfb0"))
@@ -148,6 +158,25 @@ public class PartnerMappingControllerIntegrationTest {
                 .andExpect(jsonPath("$.fio").value("Иванов И.И."));
 
     }
+
+    @Test
+    public void test34PutPartnerMappingNotExistWithAuthIsNotFound() throws Exception {
+
+        this.mockMvc.perform(put("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0" +
+                "/partnermappings/cb43d94d-0de9-4a4d-92e9-111222333444")
+                .content("{" +
+                        "\"id\":\"cb43d94d-0de9-4a4d-92e9-f5bbf243560b\"," +
+                        "\"customerId\":\"5a60a081-b940-4dae-b12f-b11d6db2dfb0\"," +
+                        "\"partnerId\":\"app123456\"," +
+                        "\"accountId\":\"/id1223344\"," +
+                        "\"fio\":\"Иванов И.И.\"" +
+                        "}")
+                .contentType("application/json;charset=UTF-8")
+                .header("Authorization","Bearer"+"5a60a081-b940-4dae-b12f-b11d6db2dfb0"))
+                .andDo(print()).andExpect(status().isNotFound());
+
+    }
+
 
     @Test
     public void test34DeletePartnerMappingsWithFitAuthIsOkAndReturnDeleted() throws Exception {
@@ -168,5 +197,53 @@ public class PartnerMappingControllerIntegrationTest {
                 .andExpect(jsonPath("$.length()").value(0));
 
     }
+
+    @Test
+    public void test36PostPartnerMappingWithAvatarWithAuthIsCreated() throws Exception {
+
+        this.mockMvc.perform(post("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0/partnermappings")
+                .content("{" +
+                        "\"id\":\"cb43d94d-0de9-4a4d-92e9-f5bbf243560b\"," +
+                        "\"customerId\":\"5a60a081-b940-4dae-b12f-b11d6db2dfb0\"," +
+                        "\"partnerId\":\"app123456\"," +
+                        "\"accountId\":\"/id1223344\"," +
+                        "\"fio\":\"ИвановИИ\"," +
+                        "\"avatar\":\"iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABK0lEQVR4nKWSMUsDURCEZ7OPQPIHUqrBwsoiabQWtBb8D6lsLQSRgJVFwC6prQWLaGdhKSSVrUQrMbbmvIDsjkXuRC/mSMjA422zs7PLJySxjApLdQMIadHv1EkS7g53x/bhYxXAkORnrgNJ9No1ZnXf2iCALQBlAAJASCL7pNeusd7oA+hkrBu4O1+HmcHMfpKZ2en+2fslgDeScSAJjC8As4xBCztHT1OJr08qTVWNzexKRJ6DuwOjEVAqTe8XtfJWH4jI2sQginLvNEuqehAsTTCnEm5SeFaCmQHj8aLDJf0nKwBzm2TJLdjU9RfTsgYMe8cv1e7X7SCBJIHF/wD0GyR37wKFVVW9EZEHwQTVTVXdBVBZYPrQ3V+FJESknDT/Q9NMxcVi8eMbjX3IUyf+S3gAAAAASUVORK5CYII=\"" +
+                        "}")
+                .contentType("application/json;charset=UTF-8")
+                .header("Authorization","Bearer"+"5a60a081-b940-4dae-b12f-b11d6db2dfb0"))
+                .andDo(print()).andExpect(status().isCreated());
+
+    }
+
+    @Test
+    public void test37GetPartnerMappingWithFitAuthIsOkAndIsArrayAndSizeIs1AndFitAvatar() throws Exception {
+        this.mockMvc.perform(get("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0" +
+                "/partnermappings/cb43d94d-0de9-4a4d-92e9-f5bbf243560b")
+                .header("Authorization","Bearer"+"5a60a081-b940-4dae-b12f-b11d6db2dfb0"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.avatar").value("iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABK0lEQVR4nKWSMUsDURCEZ7OPQPIHUqrBwsoiabQWtBb8D6lsLQSRgJVFwC6prQWLaGdhKSSVrUQrMbbmvIDsjkXuRC/mSMjA422zs7PLJySxjApLdQMIadHv1EkS7g53x/bhYxXAkORnrgNJ9No1ZnXf2iCALQBlAAJASCL7pNeusd7oA+hkrBu4O1+HmcHMfpKZ2en+2fslgDeScSAJjC8As4xBCztHT1OJr08qTVWNzexKRJ6DuwOjEVAqTe8XtfJWH4jI2sQginLvNEuqehAsTTCnEm5SeFaCmQHj8aLDJf0nKwBzm2TJLdjU9RfTsgYMe8cv1e7X7SCBJIHF/wD0GyR37wKFVVW9EZEHwQTVTVXdBVBZYPrQ3V+FJESknDT/Q9NMxcVi8eMbjX3IUyf+S3gAAAAASUVORK5CYII="));
+
+    }
+
+    @Test
+    public void test38DeletePartnerMappingsWithFitAuthIsOkAndReturnDeleted() throws Exception {
+        this.mockMvc.perform(delete("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0" +
+                "/partnermappings/cb43d94d-0de9-4a4d-92e9-f5bbf243560b")
+                .header("Authorization","Bearer"+"5a60a081-b940-4dae-b12f-b11d6db2dfb0"))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("cb43d94d-0de9-4a4d-92e9-f5bbf243560b"));
+
+    }
+
+    @Test
+    public void test39DeletePartnerMappingsIfNotNxistWithFitAuthIsNotFound() throws Exception {
+        this.mockMvc.perform(delete("/customers/5a60a081-b940-4dae-b12f-b11d6db2dfb0" +
+                "/partnermappings/cb43d94d-0de9-4a4d-92e9-f5bbf243560b")
+                .header("Authorization","Bearer"+"5a60a081-b940-4dae-b12f-b11d6db2dfb0"))
+                .andDo(print()).andExpect(status().isNotFound());
+
+    }
+
 
 }

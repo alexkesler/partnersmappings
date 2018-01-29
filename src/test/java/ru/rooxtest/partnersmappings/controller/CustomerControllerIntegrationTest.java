@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Интеграционные тесты для котроллера абонентов
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/WEB-INF/database-context.xml", "/WEB-INF/security-context.xml","/WEB-INF/partners-servlet.xml"})
+@ContextConfiguration(locations = {"/database-context.xml", "/security-context.xml", "/storage-context.xml", "/partners-servlet.xml"})
 @WebAppConfiguration
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerControllerIntegrationTest {

@@ -30,14 +30,4 @@ public class CustomerRepository {
         return customer;
     }
 
-    public Customer findByLogin(String login) {
-        TypedQuery<Customer> query = em.createQuery("select c from Customer c where c.login=:login", Customer.class);
-        query.setParameter("login", login);
-        Customer customer = null;
-        List<Customer> customers = query.getResultList();
-        if (customers.size() > 0)
-            customer = customers.get(0);
-        return customer;
-    }
-
 }
